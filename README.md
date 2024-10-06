@@ -56,6 +56,9 @@
         .hidden {
             display: none; /* 숨김 클래스 */
         }
+        video {
+            display: none; /* 처음에는 비디오 숨김 */
+        }
     </style>
 </head>
 <body>
@@ -171,6 +174,7 @@
                 document.body.style.transition = "background-color 0.7s";
                 document.body.style.backgroundColor = "black";
                 setTimeout(() => {
+                    tragicVideo.style.display = 'block'; // 비극 비디오 보이기
                     tragicVideo.play(); // 비극 비디오 재생
                     tragicMusic.play(); // 비극 음악 재생
                     hideButtons(); // 모든 버튼 숨김
@@ -185,6 +189,37 @@
                     button.classList.add('hidden'); // 숨김
                 }
             });
+            skipButton.style.display = 'block'; // 스킵 버튼 보이기
         }
 
-        skipButton.addEventListener
+        skipButton.addEventListener('click', () => {
+            document.body.style.transition = "background-color 0.2s";
+            document.body.style.backgroundColor = "white"; // 잠시 밝아짐
+            setTimeout(() => {
+                document.body.style.backgroundColor = ''; // 원래 색으로 복구
+                showButtons(); // 모든 버튼 다시 보이기
+                tragicVideo.style.display = 'none'; // 비극 비디오 숨기기
+                tragicMusic.pause(); // 비극 음악 정지
+                tragicMusic.currentTime = 0; // 비극 음악 시작 부분으로 이동
+            }, 200);
+        });
+
+        function showButtons() {
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.classList.remove('hidden'); // 보이기
+            });
+            rebroadcastButton.style.display = music1Played && music2Played ? 'block' : 'none'; // 다시보기 버튼 보이기
+        }
+
+        rebroadcastButton.addEventListener('click', () => {
+            tragicVideo.style.display = 'block'; // 비극 비디오 보이기
+            tragicVideo.play(); // 비극 비디오 재생
+            tragicMusic.play(); // 비극 음악 재생
+            hideButtons(); // 모든 버튼 숨김
+        });
+
+        tragicVideo.onended = showButtons; // 비극 비디오가 끝나면 버튼 다시 보이기
+    </script>
+</body>
+</html>
