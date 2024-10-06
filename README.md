@@ -7,7 +7,17 @@
     <title>무지개 빤짝</title>
     <style>
         body {
+            display: flex;
+            justify-content: center; /* 가로 중앙 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            height: 100vh; /* 화면 전체 높이 */
+            margin: 0; /* 기본 여백 제거 */
             transition: background-color 0.5s;
+        }
+        button {
+            padding: 10px 20px; /* 버튼 크기 조정 */
+            font-size: 16px; /* 글자 크기 조정 */
+            cursor: pointer; /* 마우스 커서 변경 */
         }
     </style>
 </head>
@@ -22,7 +32,6 @@
             let duration = 3000; // 3초
             let interval = 200; // 0.2초마다 색 변경
             let currentIndex = 0;
-            let totalIterations = duration / interval;
 
             const changeColor = () => {
                 document.body.style.backgroundColor = colors[currentIndex];
