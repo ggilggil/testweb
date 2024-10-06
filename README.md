@@ -11,8 +11,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            position: relative;
-            overflow: hidden;
+            transition: background-color 0.5s; /* 색 변경 시 애니메이션 효과 */
         }
         button {
             padding: 10px 20px;
@@ -25,31 +24,12 @@
     <button id="rainbowButton">빤짝</button>
 
     <script>
-        const colors = [
-            'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'
-        ];
+        const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+        let currentIndex = 0;
 
-        const button = document.getElementById('rainbowButton');
-
-        button.addEventListener('click', () => {
-            let duration = 3000; // 3초
-            let interval = 200; // 0.2초마다 색 변경
-            let currentIndex = 0;
-            let steps = duration / interval; // 총 단계 수
-
-            const changeColor = () => {
-                document.body.style.backgroundColor = colors[currentIndex];
-                currentIndex = (currentIndex + 1) % colors.length;
-
-                if (currentIndex < steps) {
-                    setTimeout(changeColor, interval);
-                } else {
-                    // 무지개 효과가 끝난 후 원래 색으로 복구
-                    document.body.style.backgroundColor = '';
-                }
-            };
-
-            changeColor(); // 색 변경 시작
+        document.getElementById('rainbowButton').addEventListener('click', () => {
+            document.body.style.backgroundColor = colors[currentIndex];
+            currentIndex = (currentIndex + 1) % colors.length;
         });
     </script>
 </body>
