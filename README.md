@@ -34,12 +34,27 @@
             display: flex; /* 가로로 배치 */
             flex-direction: column; /* 세로로 정렬 */
         }
+        #skipButton {
+            display: none; /* 처음에는 숨김 */
+            position: absolute; /* 절대 위치 설정 */
+            top: 20px; /* 위쪽에서 20px */
+            left: 20px; /* 왼쪽에서 20px */
+        }
+        #rebroadcastButton {
+            display: none; /* 처음에는 숨김 */
+            position: absolute; /* 절대 위치 설정 */
+            bottom: 20px; /* 아래쪽에서 20px */
+            right: 20px; /* 오른쪽에서 20px */
+        }
         input[type="range"] {
             width: 300px; /* 슬라이더 폭 조정 */
             margin-bottom: 10px; /* 슬라이더 간격 */
         }
         #volumeLabel, #speedLabel {
             margin-top: 5px; /* 레이블과 슬라이더 간격 */
+        }
+        .hidden {
+            display: none; /* 숨김 클래스 */
         }
     </style>
 </head>
@@ -59,14 +74,21 @@
         <button id="stopButton">음악 중지</button>
     </div>
 
+    <button id="skipButton">스킵</button>
+    <button id="rebroadcastButton">다시보기</button>
+
     <audio id="backgroundMusic1" src="sound.mp3" preload="auto"></audio>
     <audio id="backgroundMusic2" src="sound2.mp3" preload="auto"></audio>
+    <audio id="tragicMusic" src="tragic.mp3" preload="auto"></audio>
+    <video id="tragicVideo" src="tragic.mp4" preload="auto"></video>
 
     <script>
         const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
         let currentIndex = 0;
         let intervalId;
         let activeMusic = null; // 현재 활성화된 음악
+        let music1Played = false; // 음악 1이 재생되었는지
+        let music2Played = false; // 음악 2가 재생되었는지
 
         const volumeControl = document.getElementById('volumeControl');
         const volumeLabel = document.getElementById('volumeLabel');
@@ -74,16 +96,22 @@
         const speedLabel = document.getElementById('speedLabel');
         const music1 = document.getElementById('backgroundMusic1');
         const music2 = document.getElementById('backgroundMusic2');
+        const skipButton = document.getElementById('skipButton');
+        const rebroadcastButton = document.getElementById('rebroadcastButton');
+        const tragicMusic = document.getElementById('tragicMusic');
+        const tragicVideo = document.getElementById('tragicVideo');
 
         // 초기 볼륨 및 속도 설정
         music1.volume = volumeControl.value;
         music2.volume = volumeControl.value;
+        tragicMusic.volume = volumeControl.value; // 비극 음악 볼륨 설정
         music1.playbackRate = speedControl.value;
         music2.playbackRate = speedControl.value;
 
         volumeControl.addEventListener('input', () => {
             music1.volume = volumeControl.value; // 볼륨 설정
             music2.volume = volumeControl.value; // 볼륨 설정
+            tragicMusic.volume = volumeControl.value; // 비극 음악 볼륨 설정
             volumeLabel.textContent = `볼륨: ${(volumeControl.value * 100).toFixed(0)}%`; // 볼륨 백분율 표시
         });
 
@@ -125,22 +153,38 @@
             activeMusic = music1; // 음악 1 활성화
             music2.pause(); // 음악 2 정지
             document.getElementById('rainbowButton').click(); // 빤짝 버튼 클릭
+            music1Played = true; // 음악 1 재생됨
+            checkTragic(); // 비극 상태 확인
         });
 
         document.getElementById('music2Button').addEventListener('click', () => {
             activeMusic = music2; // 음악 2 활성화
             music1.pause(); // 음악 1 정지
             document.getElementById('rainbowButton').click(); // 빤짝 버튼 클릭
+            music2Played = true; // 음악 2 재생됨
+            checkTragic(); // 비극 상태 확인
         });
 
-        document.getElementById('stopButton').addEventListener('click', () => {
-            clearInterval(intervalId);
-            document.body.style.backgroundColor = ''; // 원래 색으로 복구
-            if (activeMusic) {
-                activeMusic.pause(); // 음악 정지
-                activeMusic.currentTime = 0; // 음악 시작 부분으로 이동
+        function checkTragic() {
+            if (music1Played && music2Played) {
+                // 두 음악을 모두 듣고 나면
+                document.body.style.transition = "background-color 0.7s";
+                document.body.style.backgroundColor = "black";
+                setTimeout(() => {
+                    tragicVideo.play(); // 비극 비디오 재생
+                    tragicMusic.play(); // 비극 음악 재생
+                    hideButtons(); // 모든 버튼 숨김
+                }, 700);
             }
-        });
-    </script>
-</body>
-</html>
+        }
+
+        function hideButtons() {
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                if (button.id !== 'skipButton') {
+                    button.classList.add('hidden'); // 숨김
+                }
+            });
+        }
+
+        skipButton.addEventListener
