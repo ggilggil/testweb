@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>무지개 빤짝</title>
+    <title>무지개 빤짝과 폭죽</title>
     <style>
         body {
             display: flex;
@@ -11,25 +11,24 @@
             align-items: center; /* 세로 중앙 정렬 */
             height: 100vh; /* 화면 전체 높이 */
             margin: 0; /* 기본 여백 제거 */
-            transition: background-color 0.5s;
-            position: relative; /* 슬라이더 위치 설정을 위한 상대적 위치 지정 */
+            position: relative; /* 상대적 위치 설정 */
+            overflow: hidden; /* 폭죽이 화면 밖으로 나가는 것을 방지 */
         }
         button {
             padding: 10px 20px; /* 버튼 크기 조정 */
             font-size: 16px; /* 글자 크기 조정 */
             cursor: pointer; /* 마우스 커서 변경 */
         }
-        #volumeControl {
+        #volumeControl, #pitchControl {
             position: absolute; /* 절대 위치 */
             top: 20px; /* 위쪽에서 20px */
-            left: 20px; /* 왼쪽에서 20px */
             width: 150px; /* 슬라이더 폭 조정 */
         }
+        #volumeControl {
+            left: 20px; /* 왼쪽에서 20px */
+        }
         #pitchControl {
-            position: absolute; /* 절대 위치 */
-            top: 20px; /* 위쪽에서 20px */
             left: 180px; /* 볼륨 슬라이더 옆에 위치 */
-            width: 150px; /* 슬라이더 폭 조정 */
         }
         #volumeLabel, #speedLabel {
             position: absolute; /* 절대 위치 */
@@ -43,6 +42,12 @@
             top: 50px; /* 속도 레이블 위치 */
             left: 180px; /* 볼륨 슬라이더 옆에 위치 */
         }
+        canvas {
+            position: absolute; /* 폭죽을 그리기 위한 캔버스 */
+            top: 0;
+            left: 0;
+            pointer-events: none; /* 캔버스 클릭 방지 */
+        }
     </style>
 </head>
 <body>
@@ -54,6 +59,7 @@
     <span id="speedLabel">속도: 1x</span>
 
     <audio id="backgroundMusic" src="sound.mp3"></audio>
+    <canvas id="fireworkCanvas"></canvas>
 
     <script>
         const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
@@ -63,6 +69,12 @@
         const pitchControl = document.getElementById('pitchControl');
         const volumeLabel = document.getElementById('volumeLabel');
         const speedLabel = document.getElementById('speedLabel');
+        const canvas = document.getElementById('fireworkCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 캔버스 크기 설정
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
         // 초기 볼륨 및 속도 설정
         music.volume = volumeControl.value;
@@ -80,8 +92,48 @@
             speedLabel.textContent = `속도: ${pitchControl.value}x`; // 속도 표시
         });
 
+        // 폭죽 애니메이션 함수
+        function createFirework(x, y) {
+            const particles = 100; // 파티클 수
+            const explosionRadius = 100; // 폭발 반경
+            const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+
+            for (let i = 0; i < particles; i++) {
+                const angle = Math.random() * 2 * Math.PI; // 무작위 각도
+                const speed = Math.random() * 4 + 1; // 무작위 속도
+                const particle = {
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 0,
+                    maxLife: Math.random() * 20 + 20,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                };
+
+                drawParticle(particle);
+            }
+        }
+
+        // 파티클 그리기
+        function drawParticle(particle) {
+            ctx.fillStyle = particle.color;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 파티클 업데이트
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.life++;
+
+            if (particle.life < particle.maxLife) {
+                requestAnimationFrame(() => drawParticle(particle));
+            }
+        }
+
         button.addEventListener('click', () => {
-            let duration = music.duration * 1000; // 음악의 길이에 따라 변경
+            let duration = 15000; // 15초
             let interval = 200; // 0.2초마다 색 변경
             let currentIndex = 0;
 
@@ -101,6 +153,9 @@
                 clearInterval(colorInterval);
                 document.body.style.backgroundColor = ''; // 원래 색으로 복구
             });
+
+            // 폭죽 생성
+            createFirework(window.innerWidth / 2, window.innerHeight / 2);
 
             // 음악이 끝나기 전에 무지개 효과 종료
             setTimeout(() => {
