@@ -111,12 +111,12 @@
                     color: colors[Math.floor(Math.random() * colors.length)],
                 };
 
-                drawParticle(particle);
+                animateParticle(particle);
             }
         }
 
-        // 파티클 그리기
-        function drawParticle(particle) {
+        // 파티클 애니메이션
+        function animateParticle(particle) {
             ctx.fillStyle = particle.color;
             ctx.beginPath();
             ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
@@ -128,7 +128,7 @@
             particle.life++;
 
             if (particle.life < particle.maxLife) {
-                requestAnimationFrame(() => drawParticle(particle));
+                requestAnimationFrame(() => animateParticle(particle));
             }
         }
 
