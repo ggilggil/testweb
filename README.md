@@ -80,7 +80,7 @@
             music.currentTime = 0; // 음악 시작 부분으로 이동
             music.play(); // 음악 재생
 
-            // 15초 동안 색 변경
+            // 색 변경 간격 설정
             intervalId = setInterval(() => {
                 document.body.style.backgroundColor = colors[currentIndex];
                 currentIndex = (currentIndex + 1) % colors.length;
@@ -93,14 +93,6 @@
                 music.pause(); // 음악 정지
                 music.currentTime = 0; // 음악 시작 부분으로 이동
             };
-
-            // 15초 후에 색 변경 중지
-            setTimeout(() => {
-                clearInterval(intervalId);
-                document.body.style.backgroundColor = ''; // 원래 색으로 복구
-                music.pause(); // 음악 정지
-                music.currentTime = 0; // 음악 시작 부분으로 이동
-            }, 15000); // 15초
         });
     </script>
 </body>
