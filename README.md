@@ -31,7 +31,7 @@
             left: 180px; /* 볼륨 슬라이더 옆에 위치 */
             width: 150px; /* 슬라이더 폭 조정 */
         }
-        #volumeLabel, #pitchLabel {
+        #volumeLabel, #speedLabel {
             position: absolute; /* 절대 위치 */
             font-size: 16px; /* 글자 크기 조정 */
         }
@@ -39,8 +39,8 @@
             top: 50px; /* 볼륨 레이블 위치 */
             left: 20px; /* 왼쪽에서 20px */
         }
-        #pitchLabel {
-            top: 50px; /* 음높이 레이블 위치 */
+        #speedLabel {
+            top: 50px; /* 속도 레이블 위치 */
             left: 180px; /* 볼륨 슬라이더 옆에 위치 */
         }
     </style>
@@ -51,7 +51,7 @@
     <span id="volumeLabel">볼륨: 50%</span>
     
     <input type="range" id="pitchControl" min="0.5" max="2" step="0.1" value="1">
-    <span id="pitchLabel">음높이: 1x</span>
+    <span id="speedLabel">속도: 1x</span>
 
     <audio id="backgroundMusic" src="sound.mp3"></audio>
 
@@ -62,11 +62,11 @@
         const volumeControl = document.getElementById('volumeControl');
         const pitchControl = document.getElementById('pitchControl');
         const volumeLabel = document.getElementById('volumeLabel');
-        const pitchLabel = document.getElementById('pitchLabel');
+        const speedLabel = document.getElementById('speedLabel');
 
-        // 초기 볼륨 및 음높이 설정
+        // 초기 볼륨 및 속도 설정
         music.volume = volumeControl.value;
-        music.playbackRate = pitchControl.value; // 초기 음높이 설정
+        music.playbackRate = pitchControl.value; // 초기 속도 설정
 
         // 볼륨 조절 이벤트
         volumeControl.addEventListener('input', () => {
@@ -74,14 +74,14 @@
             volumeLabel.textContent = `볼륨: ${(volumeControl.value * 100).toFixed(0)}%`; // 볼륨 백분율 표시
         });
 
-        // 음높이 조절 이벤트
+        // 속도 조절 이벤트
         pitchControl.addEventListener('input', () => {
-            music.playbackRate = pitchControl.value; // 음높이 조절
-            pitchLabel.textContent = `음높이: ${pitchControl.value}x`; // 음높이 표시
+            music.playbackRate = pitchControl.value; // 속도 조절
+            speedLabel.textContent = `속도: ${pitchControl.value}x`; // 속도 표시
         });
 
         button.addEventListener('click', () => {
-            let duration = 15000; // 15초
+            let duration = music.duration * 1000; // 음악의 길이에 따라 변경
             let interval = 200; // 0.2초마다 색 변경
             let currentIndex = 0;
 
@@ -96,10 +96,16 @@
 
             const colorInterval = setInterval(changeColor, interval);
 
+            // 음악이 끝나면 무지개 효과 종료
+            music.addEventListener('ended', () => {
+                clearInterval(colorInterval);
+                document.body.style.backgroundColor = ''; // 원래 색으로 복구
+            });
+
+            // 음악이 끝나기 전에 무지개 효과 종료
             setTimeout(() => {
                 clearInterval(colorInterval);
                 document.body.style.backgroundColor = ''; // 원래 색으로 복구
-                music.pause(); // 음악 정지
             }, duration);
         });
     </script>
