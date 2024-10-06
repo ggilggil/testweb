@@ -19,10 +19,16 @@
             font-size: 16px; /* 글자 크기 조정 */
             cursor: pointer; /* 마우스 커서 변경 */
         }
-        #volumeControl, #pitchControl {
+        #volumeControl {
             position: absolute; /* 절대 위치 */
             top: 20px; /* 위쪽에서 20px */
             left: 20px; /* 왼쪽에서 20px */
+            width: 150px; /* 슬라이더 폭 조정 */
+        }
+        #pitchControl {
+            position: absolute; /* 절대 위치 */
+            top: 20px; /* 위쪽에서 20px */
+            left: 180px; /* 볼륨 슬라이더 옆에 위치 */
             width: 150px; /* 슬라이더 폭 조정 */
         }
         #volumeLabel, #pitchLabel {
@@ -70,7 +76,7 @@
 
         // 음낮 조절 이벤트
         pitchControl.addEventListener('input', () => {
-            music.playbackRate = pitchControl.value;
+            music.playbackRate = pitchControl.value; // 피치 조절
             pitchLabel.textContent = `음낮: ${pitchControl.value}x`; // 음낮 표시
         });
 
