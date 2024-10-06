@@ -40,7 +40,7 @@
             left: 20px; /* 왼쪽에서 20px */
         }
         #pitchLabel {
-            top: 50px; /* 음낮 레이블 위치 */
+            top: 50px; /* 음높이 레이블 위치 */
             left: 180px; /* 볼륨 슬라이더 옆에 위치 */
         }
     </style>
@@ -51,7 +51,7 @@
     <span id="volumeLabel">볼륨: 50%</span>
     
     <input type="range" id="pitchControl" min="0.5" max="2" step="0.1" value="1">
-    <span id="pitchLabel">음낮: 1x</span>
+    <span id="pitchLabel">음높이: 1x</span>
 
     <audio id="backgroundMusic" src="sound.mp3"></audio>
 
@@ -64,9 +64,9 @@
         const volumeLabel = document.getElementById('volumeLabel');
         const pitchLabel = document.getElementById('pitchLabel');
 
-        // 초기 볼륨 및 음낮 설정
+        // 초기 볼륨 및 음높이 설정
         music.volume = volumeControl.value;
-        music.playbackRate = pitchControl.value;
+        music.playbackRate = pitchControl.value; // 초기 음높이 설정
 
         // 볼륨 조절 이벤트
         volumeControl.addEventListener('input', () => {
@@ -74,14 +74,14 @@
             volumeLabel.textContent = `볼륨: ${(volumeControl.value * 100).toFixed(0)}%`; // 볼륨 백분율 표시
         });
 
-        // 음낮 조절 이벤트
+        // 음높이 조절 이벤트
         pitchControl.addEventListener('input', () => {
-            music.playbackRate = pitchControl.value; // 피치 조절
-            pitchLabel.textContent = `음낮: ${pitchControl.value}x`; // 음낮 표시
+            music.playbackRate = pitchControl.value; // 음높이 조절
+            pitchLabel.textContent = `음높이: ${pitchControl.value}x`; // 음높이 표시
         });
 
         button.addEventListener('click', () => {
-            let duration = 3000; // 3초
+            let duration = 15000; // 15초
             let interval = 200; // 0.2초마다 색 변경
             let currentIndex = 0;
 
