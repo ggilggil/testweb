@@ -95,8 +95,8 @@
         // 폭죽 애니메이션 함수
         function createFirework(x, y) {
             const particles = 100; // 파티클 수
-            const explosionRadius = 100; // 폭발 반경
             const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+            const particleArray = [];
 
             for (let i = 0; i < particles; i++) {
                 const angle = Math.random() * 2 * Math.PI; // 무작위 각도
@@ -110,57 +110,76 @@
                     maxLife: Math.random() * 20 + 20,
                     color: colors[Math.floor(Math.random() * colors.length)],
                 };
-
-                animateParticle(particle);
+                particleArray.push(particle);
             }
+
+            // 파티클 애니메이션
+            animateParticles(particleArray);
         }
 
         // 파티클 애니메이션
-        function animateParticle(particle) {
-            ctx.fillStyle = particle.color;
-            ctx.beginPath();
-            ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
-            ctx.fill();
+        function animateParticles(particles) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 초기화
+            for (let i = 0; i < particles.length; i++) {
+                const particle = particles[i];
 
-            // 파티클 업데이트
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-            particle.life++;
+                ctx.fillStyle = particle.color;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+                ctx.fill();
 
-            if (particle.life < particle.maxLife) {
-                requestAnimationFrame(() => animateParticle(particle));
+                // 파티클 업데이트
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life++;
+
+                // 파티클이 사라질 때
+                if (particle.life >= particle.maxLife) {
+                    particles.splice(i, 1);
+                    i--;
+                }
             }
+
+            if (particles.length > 0) {
+                requestAnimationFrame(() => animateParticles(particles));
+            }
+        }
+
+        // 색이 자연스럽게 변하는 함수
+        function changeRainbowColors() {
+            let index = 0;
+
+            const changeColor = () => {
+                document.body.style.backgroundColor = colors[index];
+                index = (index + 1) % colors.length;
+            };
+
+            return setInterval(changeColor, 1000); // 1초마다 색 변경
         }
 
         button.addEventListener('click', () => {
             let duration = 15000; // 15초
-            let interval = 200; // 0.2초마다 색 변경
-            let currentIndex = 0;
+            let colorInterval = changeRainbowColors();
 
             // 음악 재생
             music.currentTime = 0; // 노래 시작 부분으로 이동
             music.play(); // 음악 재생
 
-            const changeColor = () => {
-                document.body.style.backgroundColor = colors[currentIndex];
-                currentIndex = (currentIndex + 1) % colors.length;
-            };
-
-            const colorInterval = setInterval(changeColor, interval);
+            // 폭죽 생성
+            createFirework(window.innerWidth / 2, window.innerHeight / 2);
 
             // 음악이 끝나면 무지개 효과 종료
             music.addEventListener('ended', () => {
                 clearInterval(colorInterval);
                 document.body.style.backgroundColor = ''; // 원래 색으로 복구
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // 폭죽 지우기
             });
-
-            // 폭죽 생성
-            createFirework(window.innerWidth / 2, window.innerHeight / 2);
 
             // 음악이 끝나기 전에 무지개 효과 종료
             setTimeout(() => {
                 clearInterval(colorInterval);
                 document.body.style.backgroundColor = ''; // 원래 색으로 복구
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // 폭죽 지우기
             }, duration);
         });
     </script>
