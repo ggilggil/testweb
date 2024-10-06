@@ -7,11 +7,11 @@
     <style>
         body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            position: relative; /* 절대 위치를 위한 상대 위치 설정 */
             transition: background-color 0.2s; /* 색 변경 시 애니메이션 효과 */
         }
         button {
@@ -20,18 +20,23 @@
             cursor: pointer;
             margin-bottom: 20px; /* 버튼과 슬라이더 간격 */
         }
-        input[type="range"] {
+        #volumeControl {
+            position: absolute; /* 절대 위치 설정 */
+            top: 20px; /* 위쪽에서 20px */
+            left: 20px; /* 왼쪽에서 20px */
             width: 300px; /* 슬라이더 폭 조정 */
         }
         #volumeLabel {
-            margin-top: 10px; /* 레이블과 슬라이더 간격 */
+            position: absolute; /* 절대 위치 설정 */
+            top: 50px; /* 위쪽에서 50px */
+            left: 20px; /* 왼쪽에서 20px */
         }
     </style>
 </head>
 <body>
-    <button id="rainbowButton">빤짝</button>
     <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
     <div id="volumeLabel">볼륨: 50%</div>
+    <button id="rainbowButton">빤짝</button>
     <audio id="backgroundMusic" src="sound.mp3" preload="auto"></audio>
 
     <script>
