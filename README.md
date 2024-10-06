@@ -24,11 +24,18 @@
             top: 20px; /* 위쪽에서 20px */
             left: 20px; /* 왼쪽에서 20px */
         }
+        #volumeLabel {
+            position: absolute; /* 절대 위치 */
+            top: 50px; /* 슬라이더 아래에 위치 */
+            left: 20px; /* 왼쪽에서 20px */
+            font-size: 16px; /* 글자 크기 조정 */
+        }
     </style>
 </head>
 <body>
     <button id="rainbowButton">빤짝</button>
     <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+    <span id="volumeLabel">볼륨: 50%</span>
     <audio id="backgroundMusic" src="sound.mp3"></audio>
 
     <script>
@@ -36,6 +43,7 @@
         const button = document.getElementById('rainbowButton');
         const music = document.getElementById('backgroundMusic');
         const volumeControl = document.getElementById('volumeControl');
+        const volumeLabel = document.getElementById('volumeLabel');
 
         // 초기 볼륨 설정
         music.volume = volumeControl.value;
@@ -43,6 +51,7 @@
         // 볼륨 조절 이벤트
         volumeControl.addEventListener('input', () => {
             music.volume = volumeControl.value;
+            volumeLabel.textContent = `볼륨: ${(volumeControl.value * 100).toFixed(0)}%`; // 볼륨 백분율 표시
         });
 
         button.addEventListener('click', () => {
