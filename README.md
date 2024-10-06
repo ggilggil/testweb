@@ -12,22 +12,38 @@
             height: 100vh; /* 화면 전체 높이 */
             margin: 0; /* 기본 여백 제거 */
             transition: background-color 0.5s;
+            position: relative; /* 슬라이더 위치 설정을 위한 상대적 위치 지정 */
         }
         button {
             padding: 10px 20px; /* 버튼 크기 조정 */
             font-size: 16px; /* 글자 크기 조정 */
             cursor: pointer; /* 마우스 커서 변경 */
         }
+        #volumeControl {
+            position: absolute; /* 절대 위치 */
+            top: 20px; /* 위쪽에서 20px */
+            left: 20px; /* 왼쪽에서 20px */
+        }
     </style>
 </head>
 <body>
     <button id="rainbowButton">빤짝</button>
-    <audio id="backgroundMusic" src="sound.mp3"></audio>
+    <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+    <audio id="backgroundMusic" src="song.mp3"></audio>
 
     <script>
         const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
         const button = document.getElementById('rainbowButton');
         const music = document.getElementById('backgroundMusic');
+        const volumeControl = document.getElementById('volumeControl');
+
+        // 초기 볼륨 설정
+        music.volume = volumeControl.value;
+
+        // 볼륨 조절 이벤트
+        volumeControl.addEventListener('input', () => {
+            music.volume = volumeControl.value;
+        });
 
         button.addEventListener('click', () => {
             let duration = 3000; // 3초
