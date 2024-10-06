@@ -62,7 +62,16 @@
     <canvas id="fireworkCanvas"></canvas>
 
     <script>
-        const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+        const colors = [
+            [255, 0, 0],   // 빨강
+            [255, 127, 0], // 주황
+            [255, 255, 0], // 노랑
+            [0, 255, 0],   // 초록
+            [0, 0, 255],   // 파랑
+            [75, 0, 130],  // 남색
+            [148, 0, 211]  // 보라
+        ];
+        
         const button = document.getElementById('rainbowButton');
         const music = document.getElementById('backgroundMusic');
         const volumeControl = document.getElementById('volumeControl');
@@ -145,16 +154,32 @@
             }
         }
 
+        // 색깔 보간
+        function interpolateColors(startColor, endColor, factor) {
+            const result = startColor.map((start, index) => {
+                return Math.round(start + factor * (endColor[index] - start));
+            });
+            return `rgb(${result[0]}, ${result[1]}, ${result[2]})`;
+        }
+
         // 색이 자연스럽게 변하는 함수
         function changeRainbowColors() {
             let index = 0;
+            let step = 0;
 
             const changeColor = () => {
-                document.body.style.backgroundColor = colors[index];
-                index = (index + 1) % colors.length;
+                const nextIndex = (index + 1) % colors.length;
+                const color = interpolateColors(colors[index], colors[nextIndex], step);
+                document.body.style.backgroundColor = color;
+
+                step += 0.01; // 보간 단계 증가
+                if (step >= 1) {
+                    step = 0;
+                    index = nextIndex; // 다음 색으로 이동
+                }
             };
 
-            return setInterval(changeColor, 1000); // 1초마다 색 변경
+            return setInterval(changeColor, 50); // 50ms마다 색 변경
         }
 
         button.addEventListener('click', () => {
