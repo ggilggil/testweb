@@ -7,6 +7,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -17,11 +18,20 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            margin-bottom: 20px; /* 버튼과 슬라이더 간격 */
+        }
+        input[type="range"] {
+            width: 300px; /* 슬라이더 폭 조정 */
+        }
+        #volumeLabel {
+            margin-top: 10px; /* 레이블과 슬라이더 간격 */
         }
     </style>
 </head>
 <body>
     <button id="rainbowButton">빤짝</button>
+    <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+    <div id="volumeLabel">볼륨: 50%</div>
     <audio id="backgroundMusic" src="sound.mp3" preload="auto"></audio>
 
     <script>
@@ -29,13 +39,24 @@
         let currentIndex = 0;
         let intervalId;
 
+        const volumeControl = document.getElementById('volumeControl');
+        const volumeLabel = document.getElementById('volumeLabel');
+        const music = document.getElementById('backgroundMusic');
+
+        // 초기 볼륨 설정
+        music.volume = volumeControl.value;
+
+        volumeControl.addEventListener('input', () => {
+            music.volume = volumeControl.value; // 볼륨 설정
+            volumeLabel.textContent = `볼륨: ${(volumeControl.value * 100).toFixed(0)}%`; // 볼륨 백분율 표시
+        });
+
         document.getElementById('rainbowButton').addEventListener('click', () => {
             // 초기화
             clearInterval(intervalId);
             currentIndex = 0;
 
             // 음악 재생
-            const music = document.getElementById('backgroundMusic');
             music.currentTime = 0; // 음악 시작 부분으로 이동
             music.play(); // 음악 재생
 
