@@ -1,4 +1,3 @@
-# testweb
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -23,15 +22,21 @@
 </head>
 <body>
     <button id="rainbowButton">빤짝</button>
+    <audio id="backgroundMusic" src="song.mp3"></audio>
 
     <script>
         const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
         const button = document.getElementById('rainbowButton');
+        const music = document.getElementById('backgroundMusic');
 
         button.addEventListener('click', () => {
             let duration = 3000; // 3초
             let interval = 200; // 0.2초마다 색 변경
             let currentIndex = 0;
+
+            // 음악 재생
+            music.currentTime = 0; // 노래 시작 부분으로 이동
+            music.play(); // 음악 재생
 
             const changeColor = () => {
                 document.body.style.backgroundColor = colors[currentIndex];
@@ -43,6 +48,7 @@
             setTimeout(() => {
                 clearInterval(colorInterval);
                 document.body.style.backgroundColor = ''; // 원래 색으로 복구
+                music.pause(); // 음악 정지
             }, duration);
         });
     </script>
