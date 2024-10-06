@@ -11,7 +11,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            transition: background-color 0.5s; /* 색 변경 시 애니메이션 효과 */
+            transition: background-color 0.2s; /* 색 변경 시 애니메이션 효과 */
         }
         button {
             padding: 10px 20px;
@@ -26,10 +26,24 @@
     <script>
         const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
         let currentIndex = 0;
+        let intervalId;
 
         document.getElementById('rainbowButton').addEventListener('click', () => {
-            document.body.style.backgroundColor = colors[currentIndex];
-            currentIndex = (currentIndex + 1) % colors.length;
+            // 초기화
+            clearInterval(intervalId);
+            currentIndex = 0;
+
+            // 15초 동안 색 변경
+            intervalId = setInterval(() => {
+                document.body.style.backgroundColor = colors[currentIndex];
+                currentIndex = (currentIndex + 1) % colors.length;
+            }, 200); // 0.2초마다 색 변경
+
+            // 15초 후에 색 변경 중지
+            setTimeout(() => {
+                clearInterval(intervalId);
+                document.body.style.backgroundColor = ''; // 원래 색으로 복구
+            }, 15000); // 15초
         });
     </script>
 </body>
