@@ -129,56 +129,38 @@
             clearInterval(intervalId);
             currentIndex = 0;
 
-            // 음악 재생
-            if (activeMusic) {
-                activeMusic.currentTime = 0; // 음악 시작 부분으로 이동
-                activeMusic.play(); // 음악 재생
-            }
-
             // 색 변경 간격 설정
             intervalId = setInterval(() => {
                 document.body.style.backgroundColor = colors[currentIndex];
                 currentIndex = (currentIndex + 1) % colors.length;
             }, 200); // 0.2초마다 색 변경
-
-            // 곡이 끝날 때 색 변경 중지 및 음악 정지
-            if (activeMusic) {
-                activeMusic.onended = () => {
-                    clearInterval(intervalId);
-                    document.body.style.backgroundColor = ''; // 원래 색으로 복구
-                    activeMusic.pause(); // 음악 정지
-                    activeMusic.currentTime = 0; // 음악 시작 부분으로 이동
-                };
-            }
         });
 
         document.getElementById('music1Button').addEventListener('click', () => {
-            activeMusic = music1; // 음악 1 활성화
-            music2.pause(); // 음악 2 정지
-            document.getElementById('rainbowButton').click(); // 빤짝 버튼 클릭
-            music1Played = true; // 음악 1 재생됨
-            checkTragic(); // 비극 상태 확인
+            if (activeMusic !== music1) { // 현재 음악이 음악 1이 아닐 때만 실행
+                music1Played = true; // 음악 1 재생됨
+                checkTragic(); // 비극 상태 확인
+            }
         });
 
         document.getElementById('music2Button').addEventListener('click', () => {
-            activeMusic = music2; // 음악 2 활성화
-            music1.pause(); // 음악 1 정지
-            document.getElementById('rainbowButton').click(); // 빤짝 버튼 클릭
-            music2Played = true; // 음악 2 재생됨
-            checkTragic(); // 비극 상태 확인
+            if (activeMusic !== music2) { // 현재 음악이 음악 2가 아닐 때만 실행
+                music2Played = true; // 음악 2 재생됨
+                checkTragic(); // 비극 상태 확인
+            }
         });
 
         function checkTragic() {
             if (music1Played && music2Played) {
                 // 두 음악을 모두 듣고 나면
                 document.body.style.transition = "background-color 0.7s";
-                document.body.style.backgroundColor = "black"; // 화면 어둡게
+                document.body.style.backgroundColor = "black";
                 setTimeout(() => {
                     tragicVideo.style.display = 'block'; // 비극 비디오 보이기
                     tragicMusic.play(); // 비극 음악 재생
                     tragicVideo.play(); // 비극 비디오 재생
                     hideButtons(); // 모든 버튼 숨김
-                }, 700); // 0.7초 후 비디오 재생
+                }, 700);
             }
         }
 
@@ -219,14 +201,13 @@
             hideButtons(); // 모든 버튼 숨김
         });
 
-        // 비극 비디오가 끝나면 버튼 다시 보이기 및 스킵 버튼 숨기기
         tragicVideo.onended = () => {
             document.body.style.transition = "background-color 0.3s";
-            document.body.style.backgroundColor = "white"; // 화면 밝게
+            document.body.style.backgroundColor = "white"; // 잠시 밝아짐
             setTimeout(() => {
-                showButtons(); // 비극 비디오가 끝나면 버튼 다시 보이기
-                skipButton.style.display = 'none'; // 스킵 버튼 숨기기
-            }, 300); // 0.3초 후 버튼 보이기
+                document.body.style.backgroundColor = ''; // 원래 색으로 복구
+                showButtons(); // 모든 버튼 다시 보이기
+            }, 300);
         };
     </script>
 </body>
