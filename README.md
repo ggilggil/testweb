@@ -172,13 +172,13 @@
             if (music1Played && music2Played) {
                 // 두 음악을 모두 듣고 나면
                 document.body.style.transition = "background-color 0.7s";
-                document.body.style.backgroundColor = "black";
+                document.body.style.backgroundColor = "black"; // 화면 어둡게
                 setTimeout(() => {
                     tragicVideo.style.display = 'block'; // 비극 비디오 보이기
-                    tragicVideo.play(); // 비극 비디오 재생
                     tragicMusic.play(); // 비극 음악 재생
+                    tragicVideo.play(); // 비극 비디오 재생
                     hideButtons(); // 모든 버튼 숨김
-                }, 700);
+                }, 700); // 0.7초 후 비디오 재생
             }
         }
 
@@ -219,7 +219,15 @@
             hideButtons(); // 모든 버튼 숨김
         });
 
-        tragicVideo.onended = showButtons; // 비극 비디오가 끝나면 버튼 다시 보이기
+        // 비극 비디오가 끝나면 버튼 다시 보이기 및 스킵 버튼 숨기기
+        tragicVideo.onended = () => {
+            document.body.style.transition = "background-color 0.3s";
+            document.body.style.backgroundColor = "white"; // 화면 밝게
+            setTimeout(() => {
+                showButtons(); // 비극 비디오가 끝나면 버튼 다시 보이기
+                skipButton.style.display = 'none'; // 스킵 버튼 숨기기
+            }, 300); // 0.3초 후 버튼 보이기
+        };
     </script>
 </body>
 </html>
